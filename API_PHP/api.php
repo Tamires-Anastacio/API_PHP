@@ -3,14 +3,44 @@
 
     $metodo = $_SERVER['REQUEST_METHOD'];
 
+    $arquivo = "usuarios.json";
+
+    if(!file_exists($arquivo)){
+        file_put_contents($arquivo,json_encode([],JSON_PRETTY_PRINT | JSON_UNESCAPE_UNICODE));
+    }
+
+    $usuarios = json_decode(file_get_contents($arquivo), true);
+
     //echo "Método de requisição:" .$metodo;
+
+    //$usuarios = [
+         //["id" => 1, "nome" => "Fulano", "email" => "fulano@email"],
+        //["id" => 2, "nome" => "Rayanne", "email" => "rayanne@email"]
+
+    //];
 
     switch ($metodo) {
         case 'GET':
-            echo "AQUI AÇÕES DO MÉTODO GET";
+            //echo "AQUI AÇÕES DO MÉTODO GET";
+            echo json_encode($usuarios);
             break;
+
         case 'POST':
-            echo "AQUI AÇÕES DO MÉTODO POST";
+            //echo "AQUI AÇÕES DO MÉTODO POST";
+            $dados = json_decode(file_get_contents('php://input'),true);
+            //print_r($dados);
+
+            $novo_usuario = [
+                "id" => $dados["id"],
+                "nome" => $dados["nome"],
+                "email" => $dados["email"]
+
+            ];
+
+            array_push($usuarios, $novo_usuario);
+            echo json_encode('Usuário inserido com sucesso!');
+            print_r($usuarios);
+
             break;
         
         default:
@@ -18,13 +48,7 @@
             break;
     }
 
-    //$usuarios = [
-        //["id" => 1, "nome" => "Fulano", "email" => "fulano@email"],
-        //["id" => 2, "nome" => "Rayanne", "email" => "rayanne@email"]
+    
 
-
-    //];
-
-    //echo json_encode($usuarios);
-
+    
 ?>
